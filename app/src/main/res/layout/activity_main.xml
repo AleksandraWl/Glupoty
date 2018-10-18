@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.malami.przewodnikkulinarny.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#3399FF"
+        android:minHeight="?attr/actionBarSize"
+        app:title="Lubelski przewodnik kulinarny"
+        />
+
+    <Button
+        android:id="@+id/zaloguj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="74dp"
+        android:layout_marginStart="16dp"
+        android:text="logowanie"
+        android:onClick="login"
+
+        />
+
+    <Button
+        android:id="@+id/rejestruj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="110dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="133dp"
+        android:layout_marginStart="16dp"
+        android:text="rejestracja"
+        android:onClick="rejestruj"/>
+    <Button
+        android:id="@+id/Anonimowo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="240dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="310dp"
+        android:layout_marginStart="16dp"
+
+        android:text="Anonim"
+        android:onClick="Anonimowo"
+        tools:ignore="OnClick" />
+
+    <Button
+        android:id="@+id/mapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/Anonimowo"
+        android:layout_below="@+id/Anonimowo"
+        android:layout_marginTop="22dp"
+        android:text="Mapa"
+        android:onClick="mapa"/>
+
+</RelativeLayout>
