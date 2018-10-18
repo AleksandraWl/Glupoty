@@ -28,11 +28,15 @@ public class administrator extends AppCompatActivity {
 
 
     public void dodawanieKategorii(View view) {
-            Intent i = new Intent(administrator.this, DodawanieRestauracji.class);
+            Intent i = new Intent(administrator.this, DodawanieKategorii.class);
             startActivity(i);
         }
 
 
+    public void DodajRestauracje(View view) {
+        Intent i = new Intent (administrator.this, DodawanieRestauracji.class);
+        startActivity(i);
+    }
 }
 
 

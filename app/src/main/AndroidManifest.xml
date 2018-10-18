@@ -45,9 +45,10 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".administrator" />
         <activity android:name=".DodawanieAdministratora" />
-        <activity android:name=".DodawanieRestauracji" />
+        <activity android:name=".DodawanieKategorii" />
         <activity android:name=".WyborJedzeniaAdmin" />
-        <activity android:name=".UsunAdministratora"></activity>
+        <activity android:name=".UsunAdministratora" />
+        <activity android:name=".DodawanieRestauracji"></activity>
     </application>
 
 </manifest>

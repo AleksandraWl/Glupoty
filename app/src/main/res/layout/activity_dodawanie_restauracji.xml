@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.malami.przewodnikkulinarny.DodawanieKategorii">
-
+    tools:context="com.example.malami.przewodnikkulinarny.DodawanieRestauracji">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,44 +14,69 @@
         android:layout_alignParentTop="true"
         android:background="#3399FF"
         android:minHeight="?attr/actionBarSize"
-        app:title="Dodaj kategorie"
+        app:title="Dodaj restauracje"
         />
 
 
     <EditText
-        android:id="@+id/NowaKategoria"
+        android:id="@+id/Nazwa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Kategoria"
+        android:hint="Nazwa restauracji"
         tools:layout_editor_absoluteY="50dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="74dp"
         android:layout_marginStart="16dp" />
 
     <EditText
-        android:id="@+id/Informacje"
+        android:id="@+id/adres"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Informacje"
+        android:hint="Adres"
         tools:layout_editor_absoluteY="110dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="146dp"
+        android:layout_marginTop="164dp"
         android:layout_marginStart="16dp" />
 
-
-    <Button
-        android:id="@+id/dodajKategorie"
+    <EditText
+        android:id="@+id/Szerokosc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="169dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Szerokosc"
+        tools:layout_editor_absoluteY="200dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="205dp"
-        android:layout_marginStart="16dp"
-        android:text="Dodaj kategorie"
-        android:onClick="DodajKategorie"/>
+        android:layout_marginTop="236dp"
+        android:layout_marginStart="16dp" />
+
+    <EditText
+        android:id="@+id/Dlugosc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Długość"
+        tools:layout_editor_absoluteY="272dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="308dp"
+        android:layout_marginStart="16dp" />
+
+    <Button
+        android:id="@+id/DodajRestauracje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="130dp"
+        android:text="Dodaj"
+        android:onClick="dodajRestauracje"/>
+
+
+
 
 </RelativeLayout>

@@ -12,41 +12,45 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class DodawanieRestauracji extends AppCompatActivity {
 
-    EditText NowaKategoria;
-    EditText Informacje;
-   // EditText Lokalizacja;
-    DatabaseReference kategorie;
-    String kategoria;
-    String informacje;
-    //String lokalizacja;
+    EditText Nazwa;
+    EditText Adres;
+    EditText Dlugosc;
+    EditText Szerokosc;
+
+    DatabaseReference restauracje;
+    String nazwa;
+    String adres;
+    String dlugosc;
+    String szerokosc;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dodawanie_kategorii);
+        setContentView(R.layout.activity_dodawanie_restauracji);
 
-        NowaKategoria=(findViewById(R.id.NowaKategoria));
-        Informacje = (findViewById(R.id.Informacje));
-       // Lokalizacja= (findViewById(R.id.Adres));
-        kategorie = FirebaseDatabase.getInstance().getReference("Kategorie");
+        Nazwa=findViewById(R.id.Nazwa);
+        Adres=findViewById(R.id.adres);
+        Dlugosc=findViewById(R.id.Dlugosc);
+        Szerokosc=findViewById(R.id.Szerokosc);
 
-
+        restauracje=FirebaseDatabase.getInstance().getReference();
 
     }
 
-    public void DodajKategorie(View view) {
-        kategoria = NowaKategoria.getText().toString().trim();
-        informacje= Informacje.getText().toString().trim();
-      //  lokalizacja= Lokalizacja.getText().toString().trim();
+    public void dodajRestauracje(View view) {
+        nazwa=Nazwa.getText().toString().trim();
+        adres=Adres.getText().toString().trim();
+        dlugosc=Dlugosc.getText().toString().trim();
+        szerokosc=Szerokosc.getText().toString().trim();
 
-
-        if(!TextUtils.isEmpty(kategoria))
+        if(!TextUtils.isEmpty(nazwa)&&!TextUtils.isEmpty(adres)&&!TextUtils.isEmpty(dlugosc)&&!TextUtils.isEmpty(szerokosc))
         {
-            kategorie kat = new kategorie(kategoria, informacje);
-            String id= kategorie.push().getKey();
-            kategorie.child(id).setValue(kat);
+            restauracje res = new restauracje(nazwa,dlugosc,szerokosc,adres);
+            String id= restauracje.push().getKey();
+            restauracje.child(id).setValue(res);
 
-            Toast.makeText(this, "Ok, dodano", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Dodano", Toast.LENGTH_SHORT).show();
         }
         else {Toast.makeText(this, "Nie dodano", Toast.LENGTH_SHORT).show();}
 
