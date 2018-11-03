@@ -34,7 +34,7 @@ public class DodawanieRestauracji extends AppCompatActivity {
         Dlugosc=findViewById(R.id.Dlugosc);
         Szerokosc=findViewById(R.id.Szerokosc);
 
-        restauracje=FirebaseDatabase.getInstance().getReference();
+        restauracje=FirebaseDatabase.getInstance().getReference("Restauracje");
 
     }
 
@@ -48,9 +48,11 @@ public class DodawanieRestauracji extends AppCompatActivity {
         {
             restauracje res = new restauracje(nazwa,dlugosc,szerokosc,adres);
             String id= restauracje.push().getKey();
-            restauracje.child(id).setValue(res);
+            restauracje.child(nazwa).setValue(res);
 
             Toast.makeText(this, "Dodano", Toast.LENGTH_SHORT).show();
+
+
         }
         else {Toast.makeText(this, "Nie dodano", Toast.LENGTH_SHORT).show();}
 

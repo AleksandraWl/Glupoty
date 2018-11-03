@@ -56,15 +56,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Anonimowo(View view) {
-        mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("Auth", String.valueOf(task.getException()));
-                }
-            }
-        });
-    }
+        Intent i = new Intent(MainActivity.this, DodawanieAdministratora.class);
+    startActivity(i);}
 
 
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

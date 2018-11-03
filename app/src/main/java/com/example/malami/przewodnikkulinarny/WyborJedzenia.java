@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import okhttp3.internal.cache.DiskLruCache;
 
@@ -51,16 +52,20 @@ public class WyborJedzenia extends AppCompatActivity{
     Button wyloguj;
     //Spinner spinner2;
     DatabaseReference db;
+    //DatabaseReference MDR;
     final ArrayList<String> lista=new ArrayList<>();
-
-
+    //private FirebaseDatabase mRaf;
+    Button zatwierdz;
 
     EditText NowyAdministrator;
-    DatabaseReference administratorzy;
     FirebaseAuth firebaseAuth;
     String genere;
     //Button zapytanie;
-    DatabaseReference MDR;
+    TextView adres;
+    //String adress;
+
+    DatabaseReference mDatabase;
+    DatabaseReference  lubnaRef;
 
 
 
@@ -69,24 +74,31 @@ public class WyborJedzenia extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wybor_jedzenia);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        lubnaRef = mDatabase.child("Restauracje");
+
+
         firebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         wyloguj = findViewById(R.id.wyloguj);
         //  zapytanie = (Button) findViewById(R.id.button2);
         db = FirebaseDatabase.getInstance().getReference("Restauracje");
-
+        adres= findViewById(R.id.Adres);
 
         // NowyAdministrator = (findViewById(R.id.NowyAdministrator));
         //   administratorzy = FirebaseDatabase.getInstance().getReference("Administratorzy");
 
 
         spinner = (findViewById(R.id.spinner));
-        baza = FirebaseDatabase.getInstance().getReference();
-        firebase = new FirebaseHelper(baza);
 
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchData()));
-    }
+        //adres.setText("Adres");
+
+        genere = spinner.getSelectedItem().toString();
+
+
+        }
 
 
 
@@ -142,8 +154,33 @@ public class WyborJedzenia extends AppCompatActivity{
 
 
     public void zatwierdz(View view) {
-        Intent i = new Intent (WyborJedzenia.this, MapsActivity.class);
-         startActivity(i);
+        genere = spinner.getSelectedItem().toString();
+
+        lubnaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //These are all of your children.
+                Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
+
+                for (String childKey : lubna.keySet()) {
+                    if(childKey.equals(genere)) {
+                        //childKey is your "-LQka.. and so on"
+                        //Your current object holds all the variables in your picture.
+                        Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
+
+                        String adresRes = (String) currentLubnaObject.get("adres");
+                        adres.setText(adresRes);
+                    }
+                    //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
