@@ -1,8 +1,13 @@
 package com.example.malami.przewodnikkulinarny;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,9 +35,33 @@ public class DodawanieKategorii extends AppCompatActivity {
        // Lokalizacja= (findViewById(R.id.Adres));
         kategorie = FirebaseDatabase.getInstance().getReference("Kategorie");
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.wyloguj:
+                Intent i = new Intent(DodawanieKategorii.this, Logowanie.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void DodajKategorie(View view) {
         kategoria = NowaKategoria.getText().toString().trim();

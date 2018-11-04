@@ -35,7 +35,6 @@ import java.util.Arrays;
 public class WyborJedzeniaAdmin extends AppCompatActivity{
 
     FirebaseAuth firebaseAuth;
-    private Toolbar toolbar;
     DatabaseReference db;
     Spinner spinner;
     FirebaseHelper helper;

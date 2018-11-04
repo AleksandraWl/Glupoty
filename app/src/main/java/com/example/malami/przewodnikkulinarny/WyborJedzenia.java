@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,28 +46,26 @@ import okhttp3.internal.cache.DiskLruCache;
 public class WyborJedzenia extends AppCompatActivity{
 
 
-    private Toolbar toolbar;
-    DatabaseReference baza;
     Spinner spinner;
-    FirebaseHelper firebase;
-    Button wyloguj;
-    //Spinner spinner2;
+    //Button wyloguj;
     DatabaseReference db;
-    //DatabaseReference MDR;
+
     final ArrayList<String> lista=new ArrayList<>();
-    //private FirebaseDatabase mRaf;
-    Button zatwierdz;
+
 
     EditText NowyAdministrator;
     FirebaseAuth firebaseAuth;
     String genere;
-    //Button zapytanie;
     TextView adres;
-    //String adress;
+    String dlugosc;
+    String szerokosc;
 
     DatabaseReference mDatabase;
     DatabaseReference  lubnaRef;
 
+    TextView d, s;
+
+    MapsActivity mapa;
 
 
     @Override
@@ -76,24 +75,21 @@ public class WyborJedzenia extends AppCompatActivity{
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         lubnaRef = mDatabase.child("Restauracje");
+        d=findViewById(R.id.dlugosc);
+        s=findViewById(R.id.szerokosc);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        wyloguj = findViewById(R.id.wyloguj);
-        //  zapytanie = (Button) findViewById(R.id.button2);
+
         db = FirebaseDatabase.getInstance().getReference("Restauracje");
         adres= findViewById(R.id.Adres);
-
-        // NowyAdministrator = (findViewById(R.id.NowyAdministrator));
-        //   administratorzy = FirebaseDatabase.getInstance().getReference("Administratorzy");
 
 
         spinner = (findViewById(R.id.spinner));
 
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchData()));
-        //adres.setText("Adres");
 
         genere = spinner.getSelectedItem().toString();
 
@@ -142,11 +138,11 @@ public class WyborJedzenia extends AppCompatActivity{
 
         switch (item.getItemId()) {
             case R.id.wyloguj:
-              //  AuthUI.getInstance().signOut(this);
                 Intent i = new Intent(WyborJedzenia.this, Logowanie.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 finish();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -170,6 +166,7 @@ public class WyborJedzenia extends AppCompatActivity{
 
                         String adresRes = (String) currentLubnaObject.get("adres");
                         adres.setText(adresRes);
+
                     }
                     //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
                 }
@@ -182,6 +179,46 @@ public class WyborJedzenia extends AppCompatActivity{
         });
 
 
+    }
+
+    public void mapa(View view) {
+        genere = spinner.getSelectedItem().toString();
+        lubnaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //These are all of your children.
+                Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
+
+                for (String childKey : lubna.keySet()) {
+                    if(childKey.equals(genere)) {
+                        //childKey is your "-LQka.. and so on"
+                        //Your current object holds all the variables in your picture.
+                        Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
+
+                        szerokosc = (String) currentLubnaObject.get("szerokosc");
+                        dlugosc = (String) currentLubnaObject.get("dlugosc");
+                    }
+                    //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
+                }
+
+                Double f_szerokosc=Double.parseDouble(szerokosc);
+                Double f_dlugosc=Double.parseDouble(dlugosc);
+d.setText("Dlugosc: "+f_dlugosc);
+s.setText("Szerokosc: "+ f_szerokosc);
+//mapa.DodajPunkt(f_dlugosc,f_szerokosc,genere);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+       /*Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
+       startActivity(i);*/
     }
 
 //

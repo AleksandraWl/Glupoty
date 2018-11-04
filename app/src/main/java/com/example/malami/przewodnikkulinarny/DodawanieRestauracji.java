@@ -1,8 +1,12 @@
 package com.example.malami.przewodnikkulinarny;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,6 +40,32 @@ public class DodawanieRestauracji extends AppCompatActivity {
 
         restauracje=FirebaseDatabase.getInstance().getReference("Restauracje");
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.wyloguj:
+                Intent i = new Intent(DodawanieRestauracji.this, Logowanie.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void dodajRestauracje(View view) {
@@ -47,8 +77,8 @@ public class DodawanieRestauracji extends AppCompatActivity {
         if(!TextUtils.isEmpty(nazwa)&&!TextUtils.isEmpty(adres)&&!TextUtils.isEmpty(dlugosc)&&!TextUtils.isEmpty(szerokosc))
         {
             restauracje res = new restauracje(nazwa,dlugosc,szerokosc,adres);
-            String id= restauracje.push().getKey();
-            restauracje.child(nazwa).setValue(res);
+            String id= Nazwa.getText().toString().trim();
+            restauracje.child(id).setValue(res);
 
             Toast.makeText(this, "Dodano", Toast.LENGTH_SHORT).show();
 

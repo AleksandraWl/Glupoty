@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,7 +34,35 @@ public class DodawanieAdministratora extends AppCompatActivity {
         setContentView(R.layout.activity_dodawanie_administratora);
         NowyAdministrator=(findViewById(R.id.NowyAdministrator));
         administratorzy = FirebaseDatabase.getInstance().getReference("Administratorzy");
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.wyloguj:
+                Intent i = new Intent(DodawanieAdministratora.this, Logowanie.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void dodajAdministratora(View view) {
         email = NowyAdministrator.getText().toString().trim();
