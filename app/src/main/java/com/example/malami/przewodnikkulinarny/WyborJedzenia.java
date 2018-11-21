@@ -1,8 +1,15 @@
 package com.example.malami.przewodnikkulinarny;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.hardware.SensorManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.Snapshot;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +45,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -53,22 +69,27 @@ public class WyborJedzenia extends AppCompatActivity{
     GoogleMap gmap;
     final ArrayList<String> lista=new ArrayList<>();
 
-
+    private SharedPreferences preferences;
     EditText NowyAdministrator;
     FirebaseAuth firebaseAuth;
     String genere;
     TextView adres;
-    String dlugosc;
-    String szerokosc;
+    String dlugosc, szerokosc, Nazwa, Adres;
 
     DatabaseReference mDatabase;
     DatabaseReference  lubnaRef;
     Double f_szerokosc;
     Double f_dlugosc;
-
+    private static final int RECORD_REQUEST_CODE =101 ;
     TextView d, s;
+    private SensorManager manager;
+    private static final String TAG ="" ;
 
-   // MapsActivity ma;
+    private static final String FileNameSzerokosc= "szerokosc.txt";
+    private static final String FileNameDlugosc= "dlugosc.txt";
+    private static final String FileNameNazwa="nazwa.txt";
+    private static final String FileNameAdres="adres.txt";
+
 
 
     @Override
@@ -96,9 +117,33 @@ public class WyborJedzenia extends AppCompatActivity{
 
         genere = spinner.getSelectedItem().toString();
 
+
+
+        manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        int permissionCheck = ContextCompat.checkSelfPermission(this,//pozwolenie
+                Manifest.permission.ACCESS_FINE_LOCATION);;
+        int permissionCheck2 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        int permissionCheck3 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED || permissionCheck2 !=
+                PackageManager.PERMISSION_GRANTED || permissionCheck3 !=
+                PackageManager.PERMISSION_GRANTED  ) {
+            Log.i(TAG, "Permission to record denied");
+            makeRequest();
         }
 
+        }
 
+    protected void makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                RECORD_REQUEST_CODE);
+    }
 
     private ArrayList<String> fetchData()
     {
@@ -203,44 +248,144 @@ public class WyborJedzenia extends AppCompatActivity{
 
                         szerokosc = (String) currentLubnaObject.get("szerokosc");
                         dlugosc = (String) currentLubnaObject.get("dlugosc");
+                        Nazwa=(String)currentLubnaObject.get("nazwa");
+                        Adres=(String)currentLubnaObject.get("adres");
                     }
                     //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
                 }
 
                 f_szerokosc=Double.parseDouble(szerokosc);
                 f_dlugosc=Double.parseDouble(dlugosc);
+                s.setText(f_szerokosc+"");
+                d.setText(f_dlugosc+"");
 
-                  //      d.setText("Dlugosc: "+f_dlugosc);
-//s.setText("Szerokosc: "+ f_szerokosc);
+                String textSzerokosc = s.getText().toString();
+                FileOutputStream fosSzer = null;
+                try {
+                    fosSzer=openFileOutput(FileNameSzerokosc, MODE_PRIVATE);
+                    fosSzer.write(textSzerokosc.getBytes());
+                    Toast.makeText(WyborJedzenia.this, "Save", Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if (fosSzer!=null)
+                    {
+                        try {
+                            fosSzer.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
-               /* MapsActivity ma = new MapsActivity();
-                ma.DodajPunkt(f_dlugosc,f_szerokosc,genere);
+
+               /* FileInputStream FisSzer = null;
+                try {
+                    FisSzer = openFileInput(FileNameSzerokosc);
+                    InputStreamReader isr = new InputStreamReader(FisSzer);
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder sb = new StringBuilder();
+                    String text;
+
+                    while ((text = br.readLine())!= null){
+                        sb.append(text).append("\n");
+                    }
+                    text= sb.toString();
+                 cos=Double.parseDouble(text);
+                    d.setText(cos+"");
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+*/
+
+
+                String textDlugosc = d.getText().toString();
+                FileOutputStream fosDlu = null;
+                try {
+                    fosDlu=openFileOutput(FileNameDlugosc, MODE_PRIVATE);
+                    fosDlu.write(textDlugosc.getBytes());
+                    Toast.makeText(WyborJedzenia.this, "Save", Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                s.setText(Nazwa);
+                d.setText(Adres);
+
+                String textNazwa = s.getText().toString();
+                FileOutputStream fosNa = null;
+                try {
+                    fosNa=openFileOutput(FileNameNazwa, MODE_PRIVATE);
+                    fosNa.write(textNazwa.getBytes());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if (fosNa!=null)
+                    {
+                        try {
+                            fosNa.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                String textAdres = d.getText().toString();
+                FileOutputStream fosAd = null;
+                try {
+                    fosAd=openFileOutput(FileNameAdres, MODE_PRIVATE);
+                    fosAd.write(textAdres.getBytes());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if (fosAd!=null)
+                    {
+                        try {
+                            fosAd.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+
+
                 Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
                 startActivity(i);
-                ma.DodajPunkt(f_dlugosc,f_szerokosc,genere);*/
-                getF_dlugosc();
-                getF_szerokosc();
-                Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
-                startActivity(i);
-
             }
+
+
+
+
 
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
-
 //
 
 
     public Double getF_szerokosc() {
-        s.setText("Szerokosc: "+ f_szerokosc);
+       // s.setText("Szerokosc: "+ f_szerokosc);
         return f_szerokosc;
     }
 
     public Double getF_dlugosc() {
-        d.setText("Dlugosc: "+f_dlugosc);
+        //d.setText("Dlugosc: "+f_dlugosc);
         return f_dlugosc;
     }
 }
