@@ -16,9 +16,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    Double dlugosc;
+    Double szerokosc;
+    String nazwa;
+    WyborJedzenia wj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +35,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
 
@@ -45,10 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+       // LatLng punkt = new LatLng(wj.getF_szerokosc(), wj.getF_dlugosc());
+       // mMap.addMarker(new MarkerOptions().position(punkt).title("Res"));
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng lublin = new LatLng( 51.2500000, 22.5666700);
+       // mMap.addMarker(new MarkerOptions().position(lublin).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lublin, 12));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -61,13 +69,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         googleMap.setMyLocationEnabled(true);
+
     }
 
-    public void DodajPunkt (Double dlugosc, Double szerokosc, String nazwa)
+    public void DodajPunkt (Double Dlugosc, Double Szerokosc, String Nazwa)
     {
-       /* LatLng punkt = new LatLng(dlugosc, szerokosc);
-        Marker Punkt = mMap.addMarker(new MarkerOptions().position(punkt).title(nazwa));*/
-        Toast.makeText(this, "Dane: "+dlugosc + " ", Toast.LENGTH_LONG).show();
-
+        dlugosc= Dlugosc;
+        szerokosc= Szerokosc;
+        nazwa=Nazwa;
     }
 }

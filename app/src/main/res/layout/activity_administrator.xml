@@ -100,7 +100,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Administrator"
+        android:text="Restauracja"
         tools:layout_editor_absoluteY="40dp"
         android:layout_marginTop="274dp"
         android:layout_marginStart="16dp"/>

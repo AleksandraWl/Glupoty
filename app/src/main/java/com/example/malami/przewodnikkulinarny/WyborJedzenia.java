@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +50,7 @@ public class WyborJedzenia extends AppCompatActivity{
     Spinner spinner;
     //Button wyloguj;
     DatabaseReference db;
-
+    GoogleMap gmap;
     final ArrayList<String> lista=new ArrayList<>();
 
 
@@ -62,10 +63,12 @@ public class WyborJedzenia extends AppCompatActivity{
 
     DatabaseReference mDatabase;
     DatabaseReference  lubnaRef;
+    Double f_szerokosc;
+    Double f_dlugosc;
 
     TextView d, s;
 
-    MapsActivity mapa;
+   // MapsActivity ma;
 
 
     @Override
@@ -92,7 +95,6 @@ public class WyborJedzenia extends AppCompatActivity{
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchData()));
 
         genere = spinner.getSelectedItem().toString();
-
 
         }
 
@@ -159,7 +161,11 @@ public class WyborJedzenia extends AppCompatActivity{
                 Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
 
                 for (String childKey : lubna.keySet()) {
-                    if(childKey.equals(genere)) {
+                    if (genere.equals("Restauracje"))
+                    {
+                        adres.setText("Wybierz restauracje");
+                    }
+                    else if(childKey.equals(genere)) {
                         //childKey is your "-LQka.. and so on"
                         //Your current object holds all the variables in your picture.
                         Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
@@ -201,27 +207,41 @@ public class WyborJedzenia extends AppCompatActivity{
                     //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
                 }
 
-                Double f_szerokosc=Double.parseDouble(szerokosc);
-                Double f_dlugosc=Double.parseDouble(dlugosc);
-d.setText("Dlugosc: "+f_dlugosc);
-s.setText("Szerokosc: "+ f_szerokosc);
-//mapa.DodajPunkt(f_dlugosc,f_szerokosc,genere);
+                f_szerokosc=Double.parseDouble(szerokosc);
+                f_dlugosc=Double.parseDouble(dlugosc);
 
+                  //      d.setText("Dlugosc: "+f_dlugosc);
+//s.setText("Szerokosc: "+ f_szerokosc);
 
+               /* MapsActivity ma = new MapsActivity();
+                ma.DodajPunkt(f_dlugosc,f_szerokosc,genere);
+                Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
+                startActivity(i);
+                ma.DodajPunkt(f_dlugosc,f_szerokosc,genere);*/
+                getF_dlugosc();
+                getF_szerokosc();
+                Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
+                startActivity(i);
 
             }
 
-            @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-       /*Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
-       startActivity(i);*/
     }
 
 //
 
+
+    public Double getF_szerokosc() {
+        s.setText("Szerokosc: "+ f_szerokosc);
+        return f_szerokosc;
+    }
+
+    public Double getF_dlugosc() {
+        d.setText("Dlugosc: "+f_dlugosc);
+        return f_dlugosc;
+    }
 }
 
