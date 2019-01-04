@@ -60,14 +60,14 @@ import java.util.Map;
 import okhttp3.internal.cache.DiskLruCache;
 
 
-public class WyborJedzenia extends AppCompatActivity{
+public class WyborJedzenia extends AppCompatActivity {
 
 
     Spinner spinner;
     //Button wyloguj;
     DatabaseReference db;
     GoogleMap gmap;
-    final ArrayList<String> lista=new ArrayList<>();
+    final ArrayList<String> lista = new ArrayList<>();
 
     private SharedPreferences preferences;
     EditText NowyAdministrator;
@@ -77,18 +77,18 @@ public class WyborJedzenia extends AppCompatActivity{
     String dlugosc, szerokosc, Nazwa, Adres;
 
     DatabaseReference mDatabase;
-    DatabaseReference  lubnaRef;
+    DatabaseReference lubnaRef;
     Double f_szerokosc;
     Double f_dlugosc;
-    private static final int RECORD_REQUEST_CODE =101 ;
+    private static final int RECORD_REQUEST_CODE = 101;
     TextView d, s;
     private SensorManager manager;
-    private static final String TAG ="" ;
+    private static final String TAG = "";
 
-    private static final String FileNameSzerokosc= "szerokosc.txt";
-    private static final String FileNameDlugosc= "dlugosc.txt";
-    private static final String FileNameNazwa="nazwa.txt";
-    private static final String FileNameAdres="adres.txt";
+    private static final String FileNameSzerokosc = "szerokosc.txt";
+    private static final String FileNameDlugosc = "dlugosc.txt";
+    private static final String FileNameNazwa = "nazwa.txt";
+    private static final String FileNameAdres = "adres.txt";
 
 
 
@@ -97,10 +97,11 @@ public class WyborJedzenia extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wybor_jedzenia);
 
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         lubnaRef = mDatabase.child("Restauracje");
-        d=findViewById(R.id.dlugosc);
-        s=findViewById(R.id.szerokosc);
+        d = findViewById(R.id.dlugosc);
+        s = findViewById(R.id.szerokosc);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -108,20 +109,19 @@ public class WyborJedzenia extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         db = FirebaseDatabase.getInstance().getReference("Restauracje");
-        adres= findViewById(R.id.Adres);
+        adres = findViewById(R.id.Adres);
 
 
         spinner = (findViewById(R.id.spinner));
-
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fetchData()));
-
         genere = spinner.getSelectedItem().toString();
 
 
-
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         int permissionCheck = ContextCompat.checkSelfPermission(this,//pozwolenie
-                Manifest.permission.ACCESS_FINE_LOCATION);;
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        ;
         int permissionCheck2 = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
         int permissionCheck3 = ContextCompat.checkSelfPermission(this,
@@ -129,12 +129,11 @@ public class WyborJedzenia extends AppCompatActivity{
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED || permissionCheck2 !=
                 PackageManager.PERMISSION_GRANTED || permissionCheck3 !=
-                PackageManager.PERMISSION_GRANTED  ) {
+                PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Permission to record denied");
             makeRequest();
         }
-
-        }
+    }
 
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
@@ -145,14 +144,13 @@ public class WyborJedzenia extends AppCompatActivity{
                 RECORD_REQUEST_CODE);
     }
 
-    private ArrayList<String> fetchData()
-    {
+    private ArrayList<String> fetchData() {
         lista.clear();
         lista.add("Restauracje");
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds:dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     restauracje res = ds.getValue(restauracje.class);
 
                     lista.add(res.getNazwa());
@@ -169,9 +167,6 @@ public class WyborJedzenia extends AppCompatActivity{
         return lista;
 
     }
-
-
-
 
 
     @Override
@@ -206,11 +201,9 @@ public class WyborJedzenia extends AppCompatActivity{
                 Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
 
                 for (String childKey : lubna.keySet()) {
-                    if (genere.equals("Restauracje"))
-                    {
+                    if (genere.equals("Restauracje")) {
                         adres.setText("Wybierz restauracje");
-                    }
-                    else if(childKey.equals(genere)) {
+                    } else if (childKey.equals(genere)) {
                         //childKey is your "-LQka.. and so on"
                         //Your current object holds all the variables in your picture.
                         Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
@@ -241,37 +234,36 @@ public class WyborJedzenia extends AppCompatActivity{
                 Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
 
                 for (String childKey : lubna.keySet()) {
-                    if(childKey.equals(genere)) {
+                    if (childKey.equals(genere)) {
                         //childKey is your "-LQka.. and so on"
                         //Your current object holds all the variables in your picture.
                         Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
 
                         szerokosc = (String) currentLubnaObject.get("szerokosc");
                         dlugosc = (String) currentLubnaObject.get("dlugosc");
-                        Nazwa=(String)currentLubnaObject.get("nazwa");
-                        Adres=(String)currentLubnaObject.get("adres");
+                        Nazwa = (String) currentLubnaObject.get("nazwa");
+                        Adres = (String) currentLubnaObject.get("adres");
                     }
                     //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
                 }
 
-                f_szerokosc=Double.parseDouble(szerokosc);
-                f_dlugosc=Double.parseDouble(dlugosc);
-                s.setText(f_szerokosc+"");
-                d.setText(f_dlugosc+"");
+                f_szerokosc = Double.parseDouble(szerokosc);
+                f_dlugosc = Double.parseDouble(dlugosc);
+                s.setText(f_szerokosc + "");
+                d.setText(f_dlugosc + "");
 
                 String textSzerokosc = s.getText().toString();
                 FileOutputStream fosSzer = null;
                 try {
-                    fosSzer=openFileOutput(FileNameSzerokosc, MODE_PRIVATE);
+                    fosSzer = openFileOutput(FileNameSzerokosc, MODE_PRIVATE);
                     fosSzer.write(textSzerokosc.getBytes());
                     Toast.makeText(WyborJedzenia.this, "Save", Toast.LENGTH_SHORT).show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-                    if (fosSzer!=null)
-                    {
+                } finally {
+                    if (fosSzer != null) {
                         try {
                             fosSzer.close();
                         } catch (IOException e) {
@@ -307,7 +299,7 @@ public class WyborJedzenia extends AppCompatActivity{
                 String textDlugosc = d.getText().toString();
                 FileOutputStream fosDlu = null;
                 try {
-                    fosDlu=openFileOutput(FileNameDlugosc, MODE_PRIVATE);
+                    fosDlu = openFileOutput(FileNameDlugosc, MODE_PRIVATE);
                     fosDlu.write(textDlugosc.getBytes());
                     Toast.makeText(WyborJedzenia.this, "Save", Toast.LENGTH_SHORT).show();
                 } catch (FileNotFoundException e) {
@@ -323,15 +315,14 @@ public class WyborJedzenia extends AppCompatActivity{
                 String textNazwa = s.getText().toString();
                 FileOutputStream fosNa = null;
                 try {
-                    fosNa=openFileOutput(FileNameNazwa, MODE_PRIVATE);
+                    fosNa = openFileOutput(FileNameNazwa, MODE_PRIVATE);
                     fosNa.write(textNazwa.getBytes());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-                    if (fosNa!=null)
-                    {
+                } finally {
+                    if (fosNa != null) {
                         try {
                             fosNa.close();
                         } catch (IOException e) {
@@ -343,15 +334,14 @@ public class WyborJedzenia extends AppCompatActivity{
                 String textAdres = d.getText().toString();
                 FileOutputStream fosAd = null;
                 try {
-                    fosAd=openFileOutput(FileNameAdres, MODE_PRIVATE);
+                    fosAd = openFileOutput(FileNameAdres, MODE_PRIVATE);
                     fosAd.write(textAdres.getBytes());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-                    if (fosAd!=null)
-                    {
+                } finally {
+                    if (fosAd != null) {
                         try {
                             fosAd.close();
                         } catch (IOException e) {
@@ -361,14 +351,9 @@ public class WyborJedzenia extends AppCompatActivity{
                 }
 
 
-
-
                 Intent i = new Intent(WyborJedzenia.this, MapsActivity.class);
                 startActivity(i);
             }
-
-
-
 
 
             public void onCancelled(DatabaseError databaseError) {
@@ -380,13 +365,70 @@ public class WyborJedzenia extends AppCompatActivity{
 
 
     public Double getF_szerokosc() {
-       // s.setText("Szerokosc: "+ f_szerokosc);
+        // s.setText("Szerokosc: "+ f_szerokosc);
         return f_szerokosc;
     }
 
     public Double getF_dlugosc() {
         //d.setText("Dlugosc: "+f_dlugosc);
         return f_dlugosc;
+    }
+
+
+    public void menu(View view) {
+        genere = spinner.getSelectedItem().toString();
+        lubnaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //These are all of your children.
+                Map<String, Object> lubna = (Map<String, Object>) dataSnapshot.getValue();
+
+                for (String childKey : lubna.keySet()) {
+                    if (childKey.equals(genere)) {
+                        //childKey is your "-LQka.. and so on"
+                        //Your current object holds all the variables in your picture.
+                        Map<String, Object> currentLubnaObject = (Map<String, Object>) lubna.get(childKey);
+
+                        szerokosc = (String) currentLubnaObject.get("szerokosc");
+                        dlugosc = (String) currentLubnaObject.get("dlugosc");
+                        Nazwa = (String) currentLubnaObject.get("nazwa");
+                        Adres = (String) currentLubnaObject.get("adres");
+                    }
+                    //You can access each variable like so: String variableName = (String) currentLubnaObject.get("INSERT_VARIABLE_HERE"); //data, description, taskid, time, title
+                }
+
+                s.setText(Nazwa);
+
+                String textNazwa = s.getText().toString();
+                FileOutputStream fosNa = null;
+                try {
+                    fosNa = openFileOutput(FileNameNazwa, MODE_PRIVATE);
+                    fosNa.write(textNazwa.getBytes());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fosNa != null) {
+                        try {
+                            fosNa.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+
+                Intent i = new Intent(WyborJedzenia.this, MenuRestauracji.class);
+                startActivity(i);
+            }
+
+
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 
